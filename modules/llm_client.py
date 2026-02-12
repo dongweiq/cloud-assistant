@@ -1,43 +1,35 @@
 """
 大模型客户端 - 支持多个提供商
 """
-import os
 import httpx
-from typing import Optional, Generator
-from dotenv import load_dotenv
+from typing import Optional, Generator, Dict
 
-load_dotenv()
 
 class LLMClient:
     """统一的大模型客户端"""
     
-    def __init__(self, provider: Optional[str] = None):
-        self.provider = provider or os.getenv("LLM_PROVIDER", "openai")
-        self._setup_client()
-    
-    def _setup_client(self):
-        """根据提供商配置客户端"""
-        if self.provider == "openai":
-            self.api_key = os.getenv("OPENAI_API_KEY")
-            self.base_url = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
-            self.model = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
-        elif self.provider == "zhipu":
-            self.api_key = os.getenv("ZHIPU_API_KEY")
-            self.base_url = "https://open.bigmodel.cn/api/paas/v4"
-            self.model = os.getenv("ZHIPU_MODEL", "glm-4-flash")
-        elif self.provider == "moonshot":
-            self.api_key = os.getenv("MOONSHOT_API_KEY")
-            self.base_url = "https://api.moonshot.cn/v1"
-            self.model = os.getenv("MOONSHOT_MODEL", "moonshot-v1-8k")
-        elif self.provider == "deepseek":
-            self.api_key = os.getenv("DEEPSEEK_API_KEY")
-            self.base_url = "https://api.deepseek.com/v1"
-            self.model = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
-        else:
-            raise ValueError(f"不支持的提供商: {self.provider}")
+    def __init__(self, 
+                 api_key: str,
+                 base_url: str,
+                 model: str,
+                 provider: str = "openai"):
+        self.api_key = api_key
+        self.base_url = base_url
+        self.model = model
+        self.provider = provider
         
         if not self.api_key:
-            raise ValueError(f"请在 .env 中配置 {self.provider.upper()} 的 API Key")
+            raise ValueError("API Key 未配置")
+    
+    @classmethod
+    def from_config(cls, config: Dict) -> 'LLMClient':
+        """从配置字典创建客户端"""
+        return cls(
+            api_key=config.get("api_key", ""),
+            base_url=config.get("base_url", ""),
+            model=config.get("model", ""),
+            provider=config.get("provider", "openai")
+        )
     
     def chat(self, 
              messages: list, 
@@ -112,7 +104,11 @@ class LLMClient:
         return self.chat(messages)
 
 
-# 便捷函数
-def get_llm(provider: Optional[str] = None) -> LLMClient:
-    """获取LLM客户端"""
-    return LLMClient(provider)
+def test_llm_connection(api_key: str, base_url: str, model: str) -> tuple[bool, str]:
+    """测试LLM连接"""
+    try:
+        client = LLMClient(api_key=api_key, base_url=base_url, model=model)
+        response = client.simple_chat("说'连接成功'两个字")
+        return True, response[:100]
+    except Exception as e:
+        return False, str(e)

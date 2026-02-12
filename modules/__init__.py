@@ -1,7 +1,8 @@
 """
 云端小助理 - 模块包
 """
-from .llm_client import LLMClient, get_llm
+from .config_manager import ConfigManager, get_config
+from .llm_client import LLMClient, test_llm_connection
 from .document_processor import DocumentProcessor, PDFEditor
 from .document_index import DocumentIndex
 from .translator import DocumentTranslator
@@ -11,7 +12,8 @@ from .progress_tracker import ProgressTracker, create_offer_application, create_
 from .web_search import WebSearcher, search_and_summarize
 
 __all__ = [
-    'LLMClient', 'get_llm',
+    'ConfigManager', 'get_config',
+    'LLMClient', 'test_llm_connection',
     'DocumentProcessor', 'PDFEditor',
     'DocumentIndex',
     'DocumentTranslator',

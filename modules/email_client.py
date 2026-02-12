@@ -20,13 +20,19 @@ load_dotenv()
 class EmailClient:
     """邮件客户端"""
     
-    def __init__(self):
-        self.smtp_host = os.getenv("EMAIL_SMTP_HOST", "smtp.gmail.com")
-        self.smtp_port = int(os.getenv("EMAIL_SMTP_PORT", "587"))
-        self.imap_host = os.getenv("EMAIL_IMAP_HOST", "imap.gmail.com")
-        self.imap_port = int(os.getenv("EMAIL_IMAP_PORT", "993"))
-        self.email_address = os.getenv("EMAIL_ADDRESS")
-        self.email_password = os.getenv("EMAIL_PASSWORD")
+    def __init__(self, 
+                 smtp_host: str = None,
+                 smtp_port: int = None,
+                 imap_host: str = None,
+                 imap_port: int = None,
+                 email_address: str = None,
+                 email_password: str = None):
+        self.smtp_host = smtp_host or os.getenv("EMAIL_SMTP_HOST", "smtp.gmail.com")
+        self.smtp_port = smtp_port or int(os.getenv("EMAIL_SMTP_PORT", "587"))
+        self.imap_host = imap_host or os.getenv("EMAIL_IMAP_HOST", "imap.gmail.com")
+        self.imap_port = imap_port or int(os.getenv("EMAIL_IMAP_PORT", "993"))
+        self.email_address = email_address or os.getenv("EMAIL_ADDRESS")
+        self.email_password = email_password or os.getenv("EMAIL_PASSWORD")
     
     def _check_config(self):
         """检查配置"""
