@@ -1,0 +1,37 @@
+# 云端小助理 - 依赖列表
+
+# Web界面
+streamlit>=1.30.0
+streamlit-option-menu>=0.3.6
+
+# 大模型API
+openai>=1.0.0
+httpx>=0.25.0
+
+# 文档处理
+PyMuPDF>=1.23.0
+python-docx>=1.1.0
+openpyxl>=3.1.0
+pandas>=2.0.0
+
+# 向量数据库 & 文档检索
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+
+# 图片处理
+Pillow>=10.0.0
+rembg>=2.0.50
+
+# 翻译
+deep-translator>=1.11.0
+
+# 邮件
+aiosmtplib>=3.0.0
+imapclient>=3.0.0
+
+# 网络搜索
+duckduckgo-search>=4.0.0
+
+# 工具
+python-dotenv>=1.0.0
+pydantic>=2.0.0
